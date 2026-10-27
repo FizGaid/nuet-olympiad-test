@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUET Critical Thinking & Problem Solving Olympiad</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #3182ce;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --success: #38a169;
+            --danger: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a365d, #2b6cb0);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .timer-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        #start-screen h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2b6cb0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .q-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .passage {
+            background: #f7fafc;
+            border-left: 4px solid var(--secondary);
+            padding: 12px 15px;
+            margin: 10px 0;
+            font-style: italic;
+            color: #4a5568;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+        }
+
+        .options-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .option-label:hover {
+            background: #ebf8ff;
+            border-color: #bee3f8;
+        }
+
+        .option-label input {
+            cursor: pointer;
+        }
+
+        .section-header {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .results-box {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .review-item {
+            text-align: left;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .review-item.correct {
+            background: #f0fff4;
+            border-color: #9ae6b4;
+        }
+
+        .review-item.incorrect {
+            background: #fff5f5;
+            border-color: #feb2b2;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>NUET Critical Thinking & Problem Solving Olympiad</h1>
+    <div id="timer-display" class="timer-box hidden">60:00</div>
+</header>
+
+<div class="container">
+    <!-- START SCREEN -->
+    <div id="start-screen" class="card">
+        <h2>Second-Round Olympiad Assessment</h2>
+        <p>Welcome! This test consists of <strong>32 questions</strong> covering Critical Theory, Problem Solving, and Advanced Textual Analysis. You have exactly <strong>60 minutes</strong> to complete all questions.</p>
+        <div class="form-group">
+            <label for="student-name">Enter Your Full Name:</label>
+            <input type="text" id="student-name" placeholder="e.g. Alisher Kassymov" required>
+        </div>
+        <button class="btn" id="start-btn">Start Olympiad Test</button>
+    </div>
+
+    <!-- TEST SCREEN -->
+    <div id="test-screen" class="card hidden">
+        <form id="olympiad-form">
+            <div id="questions-container"></div>
+            <div class="nav-buttons">
+                <button type="submit" class="btn" style="background-color: var(--success); width: 100%;">Submit Olympiad Test</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="results-screen" class="card hidden">
+        <div class="results-box">
+            <h2>Assessment Completed!</h2>
+            <p>Candidate: <strong id="res-name"></strong></p>
+            <div class="results-score" id="res-score">0 / 30</div>
+            <p id="res-percentage"></p>
+            <button class="btn" onclick="location.reload()">Restart Test</button>
+        </div>
+        <div id="review-container" style="margin-top: 30px;"></div>
+    </div>
+</div>
+
+<script>
+const questionsData = [
+    { id: 1, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q1: University tuition fees in Kazakhstan should be completely abolished for all undergraduate students.", type: "mc", options: ["A) A verifiable objective fact", "B) A scientific hypothesis", "C) A value judgment / recommendation", "D) A past prediction", "E) An unverified statistical correlation"], answer: 2 },
+    { id: 2, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q2: Private tutors charge high hourly rates because demand for elite university admissions coaching has surged among secondary school graduates. What is the function of the second clause?", type: "mc", options: ["A) Main conclusion", "B) Explanatory reason (reason why)", "C) Independent counter-argument", "D) Intermediate conclusion", "E) Background context"], answer: 1 },
+    { id: 3, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q3: 'Top private tutors charge exorbitant hourly fees... Tutors with advanced degrees are no more effective at teaching logic than experienced university students who charge a fraction of the cost.' Which is an underlying assumption?", type: "mc", options: ["A) Advanced degrees are essential for teaching logic.", "B) The effectiveness of a tutor in teaching logic is independent of holding an advanced degree.", "C) Parents care exclusively about hourly rates.", "D) University students are always superior tutors.", "E) High fees guarantee better performance."], answer: 1 },
+    { id: 4, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q4: 'Every single winner of the National Olympiad last year used the Green Book. Clearly, studying exclusively from the Green Book is the guaranteed path to winning gold.' What is the flaw?", type: "mc", options: ["A) Assuming correlation between studying the book and winning implies causation.", "B) Relying entirely on anecdotal evidence without statistics.", "C) Circular reasoning.", "D) Attacking the character of authors.", "E) Generalizing from population to particular."], answer: 0 },
+    { id: 5, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q5: 'Either the router is unplugged or the network is down. The router lights are normal, so it is plugged in. Therefore, the network is down.' Which argument parallels this structure?", type: "mc", options: ["A) To pass the NUET you must study hard...", "B) Either train delayed by snow or signalling failure. Snow melted, so signalling failure.", "C) All candidates who complete module pass...", "D) If library closes early...", "E) Book prices rise every year..."], answer: 1 },
+    { id: 6, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q6: Which of the following claims is the weakest and easiest to justify logically?", type: "mc", options: ["A) All NUET students excel in math.", "B) Exactly 84.5% pass the course.", "C) Some students find critical thinking problem-solving tasks challenging under strict time pressure.", "D) No student has ever failed after reading the book.", "E) Private tutoring is universally superior."], answer: 2 },
+    { id: 7, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q7: 'Urban air quality in Almaty continues to deteriorate because coal-fired power plants emit particulate matter...' What role does the claim about air quality play?", type: "mc", options: ["A) Main conclusion", "B) Direct premise", "C) Background context / target issue motivating the argument", "D) Intermediate conclusion", "E) Counter-argument"], answer: 2 },
+    { id: 8, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q8: 'Athletes using banned drugs should be stripped of medals because cheating destroys fairness.' Which illustrates the underlying principle?", type: "mc", options: ["A) Students cheating on university exams should be disqualified because academic dishonesty undermines fair competition.", "B) Professional football players should earn higher salaries...", "C) Olympic medals should be made of recycled metals...", "D) Coaches who train winning teams deserve bonuses...", "E) Amateur athletes should be allowed to compete..."], answer: 0 },
+    { id: 9, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q9: 'Astronomers observed a bright meteor. Two hours later a power outage occurred. Clearly the meteor overloaded the electrical grid.' What is the error?", type: "mc", options: ["A) Hasty generalization", "B) Post hoc ergo propter hoc (assuming B after A means A caused B)", "C) Ad hominem", "D) Anecdotal evidence", "E) Circular reasoning"], answer: 1 },
+    { id: 10, section: "Section A: Critical Thinking Theory & Test Rules", q: "Q10: 'To qualify for the final round, a candidate must score at least 85%.' If Dana qualified, what can be validly inferred?", type: "mc", options: ["A) Dana scored 100%", "B) Dana scored at least 85%", "C) Dana won gold", "D) Scoring 85% guarantees winning", "E) Dana did not prepare"], answer: 1 },
+    { id: 11, section: "Section B: Problem Solving", q: "Q11: Mentor buys 4 heavy-duty extension cords ($22 each) and 12 LED desk lamps ($14 each; pack of 2 for $25 with 10% off lamp purchase if buying 5+ packs). Delivery free for >=$150, coupon $10 off >$200. Lowest exact cost?", type: "mc", options: ["A) $178", "B) $183", "C) $193", "D) $203", "E) $218"], answer: 1 },
+    { id: 12, section: "Section B: Problem Solving", q: "Q12: Debaters Alisher, Dana, Erasyl, Madina, Timur ranked 1st-5th. (1) Alisher immediately ahead of Erasyl. (2) Timur not 1st or 5th. (3) Dana 1st or 2nd. (4) Madina behind Timur. Who is 3rd?", type: "mc", options: ["A) Alisher", "B) Dana", "C) Erasyl", "D) Madina", "E) Timur"], answer: 2 },
+    { id: 13, section: "Section B: Problem Solving", q: "Q13: Shuttle train A to D takes 50 mins (including 3-min stops at B and C). A to C takes 28 mins; B to D takes 32 mins. What is running time from Station B to C?", type: "mc", options: ["A) 7 mins", "B) 10 mins", "C) 12 mins", "D) 15 mins", "E) 17 mins"], answer: 1 },
+    { id: 14, section: "Section B: Problem Solving", q: "Q14: Timur walks 1.2 km at 1.5 m/s, Amina cycles 3.0 km at 5.0 m/s. Both arrive at 8:55 AM. Who leaves first and by how much?", type: "mc", options: ["A) Amina by 5 mins", "B) Timur by 5 mins", "C) Same time", "D) Timur by 10 mins", "E) Amina by 10 mins"], answer: 1 },
+    { id: 15, section: "Section B: Problem Solving", q: "Q15: Towns P, Q, R, S: P-Q(10), P-R(14), P-S(8), Q-R(12), R-S(16), Q-S(18). Start at P, visit Q,R,S once and return to P. Minimum total distance?", type: "mc", options: ["A) 52 km", "B) 56 km", "C) 59 km", "D) 62 km", "E) 67 km"], answer: 2 },
+    { id: 16, section: "Section B: Problem Solving", q: "Q16: In class of 40 students, 28 study advanced math, 22 study physics, 6 study neither. How many study both?", type: "mc", options: ["A) 10", "B) 12", "C) 14", "D) 16", "E) 18"], answer: 1 },
+    { id: 17, section: "Section B: Problem Solving", q: "Q17: Supermarket sells coffee $1.50 per 150g, or offer: 200g for $2.89, get another 200g free. Effective price per 300g under best deal?", type: "mc", options: ["A) $2.17", "B) $2.58", "C) $2.64", "D) $2.89", "E) $3.00"], answer: 0 },
+    { id: 18, section: "Section B: Problem Solving", q: "Q18: Tiled floor uses white hexagonal tiles and black square tiles in a repeating unit cell containing 2 white tiles for every 1 black tile. What proportion of total tiles are black?", type: "mc", options: ["A) 20%", "B) 25%", "C) 33.3%", "D) 50%", "E) 66.7%"], answer: 2 },
+    { id: 19, section: "Section B: Problem Solving", q: "Q19: Pocket contains 10 coins (1¢, 2¢, 5¢) totaling 28¢. More 5¢ than 2¢ coins, more 2¢ than 1¢ coins. How many 5¢ coins?", type: "mc", options: ["A) 2", "B) 3", "C) 4", "D) 5", "E) 6"], answer: 1 },
+    { id: 20, section: "Section B: Problem Solving", q: "Q20: Water butt holds 300 litres full. Collects 40L/week, uses 75L/week. Starting full at week 1, after how many complete weeks will it drop below 50 litres?", type: "mc", options: ["A) 6 weeks", "B) 7 weeks", "C) 8 weeks", "D) 9 weeks", "E) 10 weeks"], answer: 2 },
+    { id: 21, section: "Section B: Problem Solving", q: "Q21: Chess tournament: 3 pts win, 1 draw, 0 loss. 4 players play each other once (6 matches). Scores: 5, 4, 2, 1. How many matches ended in a draw?", type: "mc", options: ["A) 0", "B) 1", "C) 2", "D) 3", "E) 4"], answer: 2 },
+    { id: 22, section: "Section B: Problem Solving", q: "Q22: Alloy of copper and zinc weighs 120 kg with 35% copper. How much pure copper must be added so mixture contains 50% copper?", type: "mc", options: ["A) 24 kg", "B) 30 kg", "C) 36 kg", "D) 42 kg", "E) 48 kg"], answer: 2 },
+    { id: 23, section: "Section C: Advanced Textual Analysis", q: "Q23: 'Universities have rushed to integrate generative AI... Students experience decline in reasoning... Universities should suspend mandatory AI integration immediately.' Main conclusion?", type: "mc", options: ["A) Universities must suspend mandatory AI integration immediately and return to unassisted foundational writing.", "B) Students experience decline in reasoning.", "C) Failing to safeguard data privacy.", "D) Early adoption doesn't prepare students.", "E) Banning AI is feasible."], answer: 0 },
+    { id: 24, section: "Section C: Advanced Textual Analysis", q: "Q24: Astana proposes banning cars with <3 occupants to eliminate congestion based on pilot test. Which would most weaken?", type: "mc", options: ["A) Buses operating at 95% capacity.", "B) European city has metro, Astana doesn't.", "C) 60% of cars carry families with children.", "D) Camera costs exceed budget.", "E) Commuters carpooling drive longer circuitous routes, increasing total vehicle-kilometers."], answer: 4 },
+    { id: 25, section: "Section C: Advanced Textual Analysis", q: "Q25: 'Trial on antiviral: 82% recovered in 48h vs 45% in control group. 15% mild nausea.' What can be safely inferred?", type: "mc", options: ["A) Medication free of long-term side effects.", "B) Medication is effective in accelerating recovery from common cold compared to no treatment.", "C) All control patients delayed >72h.", "D) Nausea caused by sugar pill.", "E) Prevents future infections."], answer: 1 },
+    { id: 26, section: "Section C: Advanced Textual Analysis", q: "Q26: 'Museums should charge mandatory admission because grants cut 30%.' Underlying assumption?", type: "mc", options: ["A) Mandatory admission fees will generate sufficient revenue to offset the 30% government grant reduction.", "B) Visitors willing to pay high prices.", "C) Artifacts worthless without grants.", "D) No other private donations.", "E) Children never allowed free."], answer: 0 },
+    { id: 27, section: "Section C: Advanced Textual Analysis", q: "Q27: 'Electric scooters reduce urban carbon emissions. Municipal councils should subsidize scooter rentals.' Which most strengthens?", type: "mc", options: ["A) Batteries use mined minerals.", "B) 75% users previously walked or used buses.", "C) Data shows subsidized schemes lead to 25% drop in downtown automobile traffic volume and emissions.", "D) Companies make profits without subsidies.", "E) Abandoned scooters clutter walkways."], answer: 2 },
+    { id: 28, section: "Section C: Advanced Textual Analysis", q: "Q28: 'Our debating rules are infallible because they were drafted by senior judges whose wisdom cannot be questioned.' Flaw?", type: "mc", options: ["A) Assumes as true the very point open to question (circular reasoning).", "B) Treats correlation as cause.", "C) Anecdotal evidence.", "D) Ad hominem.", "E) Generalization."], answer: 0 },
+    { id: 29, section: "Section C: Advanced Textual Analysis", q: "Q29: 'I bought a used phone online and it failed in 24 hours. Therefore all pre-owned electronics online are defective.' Flaw?", type: "mc", options: ["A) Attacking seller", "B) Sweeping universal conclusion from single instance (hasty generalization)", "C) Post hoc", "D) Value judgment confusion", "E) Conflicting expert testimony"], answer: 1 },
+    { id: 30, section: "Section C: Advanced Textual Analysis", q: "Q30: 'Winter coat sales dropped 40% in November despite freezing weather.' Best explanation?", type: "mc", options: ["A) Major online retailer launched aggressive campaign offering winter coats at 60% discounts with free delivery in November.", "B) Boutique shortage in October.", "C) Imported wool quality.", "D) Lightweight jackets preferred.", "E) Extended operating hours."], answer: 0 },
+    { id: 31, section: "Section C: Advanced Textual Analysis", q: "Q31: Economist paper vs labor union activist claim on minimum wage. Most significant factor when evaluating credibility?", type: "mc", options: ["A) Labor union activists have a direct financial and political interest in advocating for higher wages.", "B) Economists never make errors.", "C) Activists uneducated.", "D) Journals reject articles.", "E) Minimum wage unchanged."], answer: 0 },
+    { id: 32, section: "Section C: Advanced Textual Analysis", q: "Q32: 'If growth is high, tax revenues rise. Revenues rose. Therefore growth was high.' Exhibits same logical flaw as:", type: "mc", options: ["A) If it rains, grass gets wet. Grass is wet. Therefore it rained. (Affirming consequent)", "B) If student studies hard, passes exam...", "C) All economists understand...", "D) Either inflation or unemployment...", "E) When temperatures drop..."], answer: 0 }
+];
+
+let timeLeft = 60 * 60; // 60 minutes
+let timerInterval;
+let studentName = "";
+
+document.getElementById('start-btn').addEventListener('click', () => {
+    const nameInput = document.getElementById('student-name').value.trim();
+    if(!nameInput) {
+        alert("Please enter your full name to start the Olympiad test.");
+        return;
+    }
+    studentName = nameInput;
+    document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('test-screen').classList.remove('hidden');
+    document.getElementById('timer-display').classList.remove('hidden');
+    
+    buildTest();
+    startTimer();
+});
+
+function buildTest() {
+    const container = document.getElementById('questions-container');
+    let currentSection = "";
+    let html = "";
+
+    questionsData.forEach((q, index) => {
+        if(q.section !== currentSection) {
+            currentSection = q.section;
+            html += `<div class="section-header">${currentSection}</div>`;
+        }
+
+        html += `
+            <div class="question-card">
+                <div class="q-title">${q.q}</div>
+                <div class="options-list">
+        `;
+
+        q.options.forEach((opt, optIndex) => {
+            html += `
+                <label class="option-label">
+                    <input type="radio" name="q${q.id}" value="${optIndex}">
+                    <span>${opt}</span>
+                </label>
+            `;
+        });
+
+        html += `</div></div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        if(timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Time is up! Your test will be submitted automatically.");
+            submitTest();
+            return;
+        }
+        timeLeft--;
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        document.getElementById('timer-display').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+document.getElementById('olympiad-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(confirm("Are you sure you want to submit your answers?")) {
+        clearInterval(timerInterval);
+        submitTest();
+    }
+});
+
+function submitTest() {
+    document.getElementById('test-screen').classList.add('hidden');
+    document.getElementById('timer-display').classList.add('hidden');
+    document.getElementById('results-screen').classList.remove('hidden');
+
+    let score = 0;
+    let reviewHtml = "<h3>Detailed Answer Review</h3>";
+
+    questionsData.forEach((q) => {
+        const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+        const userAns = selected ? parseInt(selected.value) : -1;
+        const isCorrect = userAns === q.answer;
+        if(isCorrect) score++;
+
+        reviewHtml += `
+            <div class="review-item ${isCorrect ? 'correct' : 'incorrect'}">
+                <strong>${q.q}</strong><br>
+                Your answer: ${userAns !== -1 ? q.options[userAns] : 'Not answered'}<br>
+                Correct answer: <strong>${q.options[q.answer]}</strong>
+            </div>
+        `;
+    });
+
+    document.getElementById('res-name').textContent = studentName;
+    document.getElementById('res-score').textContent = `${score} / ${questionsData.length}`;
+    document.getElementById('res-percentage').textContent = `Percentage: ${Math.round((score / questionsData.length) * 100)}%`;
+    document.getElementById('review-container').innerHTML = reviewHtml;
+    window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
